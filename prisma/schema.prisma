@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Channel {
+  id                    String            @id @default(cuid())
+  slug                  String            @unique
+  name                  String
+  description           String?
+  accent                String            @default("#d7ff64")
+  enabled               Boolean           @default(true)
+  playbackMode          String            @default("ORDERED")
+  repeatDays            Int               @default(7)
+  interstitialCount     Int               @default(1)
+  useTrailers           Boolean           @default(true)
+  useAds                Boolean           @default(false)
+  interstitialMode      String            @default("RANDOM")
+  interstitialRepeatDays Int              @default(3)
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  media                 ChannelMedia[]
+  ads                   ChannelAd[]
+  history               PlaybackHistory[]
+}
+
+model Media {
+  id             String            @id @default(cuid())
+  type           String
+  title          String
+  year           Int?
+  enabled        Boolean           @default(true)
+  seriesTitle    String?
+  seasonNumber   Int?
+  episodeNumber  Int?
+  durationSeconds Int              @default(300)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  sources        MediaSource[]
+  channels       ChannelMedia[]
+  history        PlaybackHistory[]
+}
+
+model MediaSource {
+  id         String   @id @default(cuid())
+  mediaId    String
+  provider   String
+  externalId String?
+  iframeUrl  String?
+  streamUrl  String?
+  priority   Int      @default(0)
+  enabled    Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  media      Media    @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+}
+
+model ChannelMedia {
+  id        String  @id @default(cuid())
+  channelId String
+  mediaId   String
+  position  Int     @default(0)
+  weight    Int     @default(1)
+  enabled   Boolean @default(true)
+  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  media     Media   @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@unique([channelId, mediaId])
+  @@index([channelId, position])
+}
+
+model Ad {
+  id              String            @id @default(cuid())
+  title           String
+  type            String
+  videoUrl        String
+  enabled         Boolean           @default(true)
+  durationSeconds Int               @default(60)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  channels        ChannelAd[]
+  history         PlaybackHistory[]
+}
+
+model ChannelAd {
+  id        String  @id @default(cuid())
+  channelId String
+  adId      String
+  position  Int     @default(0)
+  weight    Int     @default(1)
+  enabled   Boolean @default(true)
+  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  ad        Ad      @relation(fields: [adId], references: [id], onDelete: Cascade)
+
+  @@unique([channelId, adId])
+  @@index([channelId, position])
+}
+
+model PlaybackHistory {
+  id          String    @id @default(cuid())
+  channelId   String
+  contentType String
+  mediaId     String?
+  adId        String?
+  sourceUrl   String
+  startedAt   DateTime  @default(now())
+  finishedAt  DateTime?
+  channel     Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  media       Media?    @relation(fields: [mediaId], references: [id], onDelete: SetNull)
+  ad          Ad?       @relation(fields: [adId], references: [id], onDelete: SetNull)
+
+  @@index([channelId, startedAt])
+  @@index([channelId, mediaId, startedAt])
+  @@index([channelId, adId, startedAt])
+}

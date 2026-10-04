@@ -5,7 +5,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   const { id: channelId } = await params;
   const body = (await request.json()) as Record<string, unknown>;
   const mediaId = String(body.mediaId ?? "");
-  if (!mediaId) return apiError("mediaId is required");
+  if (!mediaId) return apiError("Не указан контент");
   try {
     const item = await db.channelMedia.upsert({
       where: { channelId_mediaId: { channelId, mediaId } },
@@ -24,6 +24,6 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     });
     return Response.json(item, { status: 201 });
   } catch {
-    return apiError("Channel or media not found", 404);
+    return apiError("Канал или контент не найдены", 404);
   }
 }

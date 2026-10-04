@@ -32,8 +32,20 @@ model Media {
   id             String            @id @default(cuid())
   type           String
   title          String
+  originalTitle  String?
   year           Int?
   enabled        Boolean           @default(true)
+  description    String?
+  posterUrl      String?
+  kinopoiskId    String?           @unique
+  kinopoiskUrl   String?
+  genres         String?
+  countries      String?
+  directors      String?
+  cast           String?
+  rating         Float?
+  ratingCount    Int?
+  ageRating      String?
   seriesTitle    String?
   seasonNumber   Int?
   episodeNumber  Int?

@@ -21,7 +21,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   try {
     return Response.json(await db.channel.update({ where: { id }, data }));
   } catch {
-    return apiError("Channel not found or slug is already in use", 409);
+    return apiError("Канал не найден или этот адрес уже занят", 409);
   }
 }
 
@@ -31,6 +31,6 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
     await db.channel.delete({ where: { id } });
     return new Response(null, { status: 204 });
   } catch {
-    return apiError("Channel not found", 404);
+    return apiError("Канал не найден", 404);
   }
 }

@@ -5,7 +5,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   const { id: channelId } = await params;
   const body = (await request.json()) as Record<string, unknown>;
   const adId = String(body.adId ?? "");
-  if (!adId) return apiError("adId is required");
+  if (!adId) return apiError("Не указан ролик");
   try {
     const item = await db.channelAd.upsert({
       where: { channelId_adId: { channelId, adId } },
@@ -24,6 +24,6 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     });
     return Response.json(item, { status: 201 });
   } catch {
-    return apiError("Channel or interstitial not found", 404);
+    return apiError("Канал или ролик не найдены", 404);
   }
 }

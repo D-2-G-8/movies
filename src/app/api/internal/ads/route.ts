@@ -13,7 +13,7 @@ export async function POST(request: Request) {
   const body = (await request.json()) as Record<string, unknown>;
   const title = String(body.title ?? "").trim();
   const videoUrl = String(body.videoUrl ?? "").trim();
-  if (!title || !videoUrl) return apiError("Title and video URL are required");
+  if (!title || !videoUrl) return apiError("Название и ссылка на видео обязательны");
   const ad = await db.ad.create({
     data: {
       title,

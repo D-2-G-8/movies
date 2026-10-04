@@ -186,9 +186,27 @@ button { color: inherit; }
 .create-panel .wide { grid-column: span 2; }
 label { display: grid; gap: 7px; }
 label > span, .compact-field span { color: #858a93; font: 10px var(--mono); text-transform: uppercase; letter-spacing: .07em; }
-input, select { width: 100%; min-height: 40px; padding: 0 11px; border: 1px solid #2a2e35; border-radius: 4px; outline: 0; background: #0d0f12; color: #e8e9e4; }
-input:focus, select:focus { border-color: #6b7650; box-shadow: 0 0 0 2px rgba(215,255,100,.07); }
+input, select, textarea { width: 100%; min-height: 40px; padding: 0 11px; border: 1px solid #2a2e35; border-radius: 4px; outline: 0; background: #0d0f12; color: #e8e9e4; }
+textarea { padding-block: 10px; resize: vertical; font: inherit; line-height: 1.45; }
+input:focus, select:focus, textarea:focus { border-color: #6b7650; box-shadow: 0 0 0 2px rgba(215,255,100,.07); }
 input[type="color"] { padding: 5px; }
+.kinopoisk-import { grid-template-columns: minmax(220px, .8fr) minmax(320px, 2fr) auto; border-color: rgba(255, 102, 0, .28); background: linear-gradient(120deg, rgba(255, 102, 0, .055), #111317 42%); }
+.kinopoisk-url { grid-column: auto; }
+.kinopoisk-preview { display: grid; grid-template-columns: 220px minmax(0, 1fr); overflow: hidden; border: 1px solid rgba(255, 102, 0, .28); border-radius: 6px; background: #111317; }
+.kinopoisk-poster { min-height: 330px; display: grid; place-items: center; overflow: hidden; background: #090a0c; color: #565b63; }
+.kinopoisk-poster img { width: 100%; height: 100%; object-fit: cover; }
+.kinopoisk-card-body { display: grid; gap: 18px; padding: 24px; }
+.kinopoisk-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.kinopoisk-card-head h2 { margin: 7px 0 0; font-size: 28px; letter-spacing: -.04em; }
+.kinopoisk-card-head a, .media-title-cell a { color: #ff8c42; font-size: 11px; }
+.kinopoisk-fields { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.kinopoisk-fields .wide { grid-column: 1 / -1; }
+.kinopoisk-meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; margin: 0; border-top: 1px solid var(--line); }
+.kinopoisk-meta div { display: grid; grid-template-columns: 92px 1fr; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.kinopoisk-meta dt { color: #6f747d; font: 9px var(--mono); text-transform: uppercase; }
+.kinopoisk-meta dd { margin: 0; color: #bbc0c7; font-size: 12px; }
+.import-save { justify-self: start; }
+.import-warning { margin: 0; padding: 12px 14px; border: 1px solid rgba(255, 175, 75, .25); border-radius: 4px; background: rgba(255, 175, 75, .06); color: #ffc27b; font-size: 13px; }
 .stack-list { display: grid; gap: 16px; }
 .admin-card { border: 1px solid var(--line); border-radius: 6px; background: #111317; }
 .channel-editor { border-top: 2px solid var(--accent); }
@@ -223,6 +241,9 @@ input[type="color"] { padding: 5px; }
 .table-head { background: #15181d; color: #70757e; font: 9px var(--mono); text-transform: uppercase; letter-spacing: .1em; }
 .table-row { min-height: 64px; border-top: 1px solid var(--line); color: #b8bbc2; font-size: 13px; }
 .table-row > div:first-child { display: grid; gap: 4px; }
+.table-row .media-title-cell { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.media-title-cell > img { width: 38px; height: 54px; flex: 0 0 auto; border-radius: 3px; object-fit: cover; background: #090a0c; }
+.media-title-cell > div { min-width: 0; display: grid; gap: 3px; }
 .table-row strong { color: var(--text); font-size: 14px; }
 .table-row small { color: var(--muted); }
 .type-pill { width: max-content; padding: 4px 7px; border: 1px solid var(--line); border-radius: 3px; color: #9ca1aa; font: 9px var(--mono); }
@@ -258,6 +279,9 @@ input[type="color"] { padding: 5px; }
   .create-panel > div:first-child { grid-column: 1 / -1; }
   .ad-row { grid-template-columns: 46px 1fr auto auto; }
   .assign-form { grid-column: 2 / 3; }
+  .kinopoisk-import { grid-template-columns: 1fr auto; }
+  .kinopoisk-import > div:first-child { grid-column: 1 / -1; }
+  .kinopoisk-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 760px) {
@@ -292,4 +316,9 @@ input[type="color"] { padding: 5px; }
   .ad-row { grid-template-columns: 44px 1fr auto; }
   .assign-form { grid-column: 1 / -1; }
   .ad-row .state-toggle { grid-column: 2; }
+  .kinopoisk-import { grid-template-columns: 1fr; }
+  .kinopoisk-preview { grid-template-columns: 1fr; }
+  .kinopoisk-poster { min-height: 0; aspect-ratio: 2 / 3; }
+  .kinopoisk-fields, .kinopoisk-meta { grid-template-columns: 1fr; }
+  .kinopoisk-card-head { flex-direction: column; }
 }

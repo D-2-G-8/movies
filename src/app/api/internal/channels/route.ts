@@ -18,7 +18,7 @@ export async function GET() {
 export async function POST(request: Request) {
   const body = (await request.json()) as Record<string, unknown>;
   const name = String(body.name ?? "").trim();
-  if (!name) return apiError("Name is required");
+  if (!name) return apiError("Название обязательно");
   try {
     const channel = await db.channel.create({
       data: {
@@ -38,6 +38,6 @@ export async function POST(request: Request) {
     });
     return Response.json(channel, { status: 201 });
   } catch {
-    return apiError("A channel with this slug already exists", 409);
+    return apiError("Канал с таким адресом уже существует", 409);
   }
 }

@@ -7,6 +7,6 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
     await db.channelAd.delete({ where: { channelId_adId: { channelId, adId } } });
     return new Response(null, { status: 204 });
   } catch {
-    return apiError("Channel interstitial link not found", 404);
+    return apiError("Ролик не найден в расписании канала", 404);
   }
 }

@@ -17,5 +17,5 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
       playbackMode: true,
     },
   });
-  return channel ? Response.json(channel) : apiError("Channel not found", 404);
+  return channel ? Response.json(channel) : apiError("Канал не найден", 404);
 }

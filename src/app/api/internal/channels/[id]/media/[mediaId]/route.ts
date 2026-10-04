@@ -15,7 +15,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     });
     return Response.json(item);
   } catch {
-    return apiError("Channel content link not found", 404);
+    return apiError("Контент не найден в расписании канала", 404);
   }
 }
 
@@ -25,6 +25,6 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
     await db.channelMedia.delete({ where: { channelId_mediaId: { channelId, mediaId } } });
     return new Response(null, { status: 204 });
   } catch {
-    return apiError("Channel content link not found", 404);
+    return apiError("Контент не найден в расписании канала", 404);
   }
 }

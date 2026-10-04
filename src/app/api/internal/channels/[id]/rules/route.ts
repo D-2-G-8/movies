@@ -14,7 +14,7 @@ const ruleFields = {
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const rules = await db.channel.findUnique({ where: { id }, select: ruleFields });
-  return rules ? Response.json(rules) : apiError("Channel not found", 404);
+  return rules ? Response.json(rules) : apiError("Канал не найден", 404);
 }
 
 export async function PATCH(request: Request, context: { params: Promise<{ id: string }> }) {
@@ -36,6 +36,6 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
     });
     return Response.json(channel);
   } catch {
-    return apiError("Channel not found", 404);
+    return apiError("Канал не найден", 404);
   }
 }

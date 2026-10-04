@@ -14,7 +14,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   try {
     return Response.json(await db.ad.update({ where: { id }, data }));
   } catch {
-    return apiError("Ad or trailer not found", 404);
+    return apiError("Реклама или трейлер не найдены", 404);
   }
 }
 
@@ -24,6 +24,6 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
     await db.ad.delete({ where: { id } });
     return new Response(null, { status: 204 });
   } catch {
-    return apiError("Ad or trailer not found", 404);
+    return apiError("Реклама или трейлер не найдены", 404);
   }
 }

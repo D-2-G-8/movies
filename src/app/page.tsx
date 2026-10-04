@@ -7,6 +7,16 @@ import type { PublicChannel } from "@/lib/types";
 
 type ChannelCard = PublicChannel & { _count: { media: number } };
 
+function channelCount(value: number) {
+  const ending = value % 10 === 1 && value % 100 !== 11 ? "канал" : value % 10 >= 2 && value % 10 <= 4 && (value % 100 < 10 || value % 100 >= 20) ? "канала" : "каналов";
+  return `${value} ${ending}`;
+}
+
+function titleCount(value: number) {
+  const ending = value % 10 === 1 && value % 100 !== 11 ? "название" : value % 10 >= 2 && value % 10 <= 4 && (value % 100 < 10 || value % 100 >= 20) ? "названия" : "названий";
+  return `${value} ${ending}`;
+}
+
 export default function Home() {
   const [channels, setChannels] = useState<ChannelCard[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,19 +35,19 @@ export default function Home() {
           <span className="brand-mark"><Radio size={18} /></span>
           Nightwave
         </Link>
-        <Link className="ghost-button" href="/admin"><Settings2 size={16} /> Studio</Link>
+        <Link className="ghost-button" href="/admin"><Settings2 size={16} /> Студия</Link>
       </nav>
 
       <section className="hero">
-        <div className="eyebrow"><span className="live-dot" /> On air now</div>
-        <h1>Don’t choose.<br /><span>Just tune in.</span></h1>
-        <p>Your small, always-on cinema. Pick a frequency and see what’s playing.</p>
+        <div className="eyebrow"><span className="live-dot" /> Сейчас в эфире</div>
+        <h1>Не выбирай.<br /><span>Просто включай.</span></h1>
+        <p>Твой личный кинотеатр, который всегда в эфире. Выбирай канал — там уже что-то идёт.</p>
       </section>
 
       <section className="channel-section">
         <div className="section-heading">
-          <h2>Live channels</h2>
-          <span>{channels.length} frequencies</span>
+          <h2>Каналы в эфире</h2>
+          <span>{channelCount(channels.length)}</span>
         </div>
 
         {loading ? (
@@ -55,28 +65,28 @@ export default function Home() {
               >
                 <div className="channel-glow" />
                 <div className="channel-topline">
-                  <span>CH {String(index + 1).padStart(2, "0")}</span>
-                  <span className="channel-status"><i /> Live</span>
+                  <span>КАНАЛ {String(index + 1).padStart(2, "0")}</span>
+                  <span className="channel-status"><i /> В эфире</span>
                 </div>
                 <div className="channel-title">
                   <h3>{channel.name}</h3>
                   <p>{channel.description}</p>
                 </div>
                 <div className="channel-meta">
-                  <span>{channel.playbackMode.toLowerCase()} · {channel._count.media} titles</span>
-                  <span className="tune-in">Tune in <ArrowUpRight size={18} /></span>
+                  <span>{channel.playbackMode === "RANDOM" ? "случайный порядок" : "по порядку"} · {titleCount(channel._count.media)}</span>
+                  <span className="tune-in">Смотреть <ArrowUpRight size={18} /></span>
                 </div>
               </Link>
             ))}
           </div>
         ) : (
-          <div className="empty-state">No channel is broadcasting. Enable one in Studio.</div>
+          <div className="empty-state">Сейчас нет активных каналов. Включи канал в Студии.</div>
         )}
       </section>
 
       <footer className="home-footer">
-        <span>Nightwave private broadcast system</span>
-        <span>Local signal · SQLite</span>
+        <span>Личная система вещания Nightwave</span>
+        <span>Прямой эфир · SQLite</span>
       </footer>
     </main>
   );

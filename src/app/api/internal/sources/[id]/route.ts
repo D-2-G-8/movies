@@ -15,7 +15,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   try {
     return Response.json(await db.mediaSource.update({ where: { id }, data }));
   } catch {
-    return apiError("Source not found", 404);
+    return apiError("Источник не найден", 404);
   }
 }
 
@@ -25,6 +25,6 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
     await db.mediaSource.delete({ where: { id } });
     return new Response(null, { status: 204 });
   } catch {
-    return apiError("Source not found", 404);
+    return apiError("Источник не найден", 404);
   }
 }

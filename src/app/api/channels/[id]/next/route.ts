@@ -5,8 +5,8 @@ export async function POST(_request: Request, { params }: { params: Promise<{ id
   try {
     const { id } = await params;
     const playback = await advancePlayback(id);
-    return playback ? Response.json(playback) : apiError("Channel not found or disabled", 404);
+    return playback ? Response.json(playback) : apiError("Канал не найден или выключен", 404);
   } catch {
-    return apiError("Could not select the next item", 409);
+    return apiError("Не удалось выбрать следующую программу", 409);
   }
 }

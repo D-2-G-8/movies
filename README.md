@@ -66,7 +66,7 @@ npm run db:seed    # пересоздать демонстрационные д�
 npm run db:studio  # открыть Prisma Studio
 ```
 
-Seed создаёт каналы Horror, Comedy TV и Cartoons, семь тестовых программ, прямые MP4-источники и три вставки. Повторный `npm run db:seed` очищает текущие локальные данные и возвращает демо-состояние.
+Seed создаёт каналы Horror, Comedy TV и Cartoons, четыре реальные public-domain программы из Internet Archive и официальный трейлер Blender Foundation. Повторный `npm run db:seed` очищает текущие локальные данные и возвращает демо-состояние.
 
 ## Архитектура
 
@@ -131,9 +131,20 @@ interface MediaProvider {
 
 В MVP есть:
 
+- `InternetArchiveProvider` — по публичному identifier получает metadata item, выбирает браузерный MP4 и возвращает потоковый URL;
 - `DirectUrlProvider` — прямой MP4/совместимый URL или iframe;
 - `LocalProvider` — путь к локально раздаваемому файлу;
 - `FutureExternalProvider` — пустая точка расширения для будущего провайдера.
+
+Рабочий пример источника:
+
+```text
+provider:   INTERNET_ARCHIVE
+externalId: Night.Of.The.Living.Dead_1080p
+priority:   100
+```
+
+Для такого источника `streamUrl` не нужен: backend запросит `https://archive.org/metadata/:identifier`, выберет доступный MP4 и передаст клиенту прямой download URL. Ответ metadata кешируется на сутки.
 
 Чтобы добавить провайдер:
 
@@ -141,7 +152,7 @@ interface MediaProvider {
 2. Добавьте её в массив `providers` в `src/lib/providers/index.ts`.
 3. Создавайте источники с совпадающим значением `provider` через Studio или internal API.
 
-MVP не обходит DRM, токены и защиты и не использует scraping. Seed содержит только публичные демонстрационные MP4.
+MVP не обходит DRM, токены и защиты и не использует scraping. Seed использует записи, помеченные в Internet Archive как Public Domain, а для вставки — официальный CC-BY-трейлер Big Buck Bunny с `download.blender.org`.
 
 ## Работа через Studio
 
@@ -156,7 +167,7 @@ MVP не обходит DRM, токены и защиты и не использ
 
 1. В **Content** создайте Movie, Series, Episode или Cartoon.
 2. Для Episode заполните series, season и episode.
-3. В **Sources** выберите созданный контент, provider, URL и priority.
+3. В **Sources** выберите созданный контент, provider и priority. Для Internet Archive укажите `Archive identifier`, для Direct URL — `Stream URL`.
 4. Вернитесь в **Channels** и добавьте контент в нужный канал.
 
 ### Добавить трейлер или рекламу

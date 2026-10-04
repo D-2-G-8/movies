@@ -209,6 +209,7 @@ export function AdminStudio() {
         method: "POST",
         body: JSON.stringify({
           provider: form.get("provider"),
+          externalId: form.get("externalId"),
           streamUrl: form.get("streamUrl"),
           priority: intValue(form, "priority"),
           enabled: true,
@@ -350,8 +351,9 @@ export function AdminStudio() {
             <form className="create-panel" onSubmit={createSource}>
               <div><span className="panel-kicker">Resolver</span><h2>Connect source</h2></div>
               <label><span>Content</span><select name="mediaId" required defaultValue=""><option value="" disabled>Select title…</option>{media.map((item) => <option value={item.id} key={item.id}>{item.title}</option>)}</select></label>
-              <label><span>Provider</span><select name="provider"><option value="DIRECT_URL">Direct URL</option><option value="LOCAL">Local</option><option value="EXTERNAL">External (future)</option></select></label>
-              <label className="wide"><span>Stream URL</span><input name="streamUrl" type="url" placeholder="https://…/video.mp4" required /></label>
+              <label><span>Provider</span><select name="provider"><option value="INTERNET_ARCHIVE">Internet Archive</option><option value="DIRECT_URL">Direct URL</option><option value="LOCAL">Local</option><option value="EXTERNAL">External (future)</option></select></label>
+              <label><span>Archive identifier</span><input name="externalId" placeholder="his_girl_friday" /></label>
+              <label className="wide"><span>Stream URL</span><input name="streamUrl" type="url" placeholder="Optional for Archive; required for Direct URL" /></label>
               <label><span>Priority</span><input name="priority" type="number" defaultValue="10" /></label>
               <button className="primary-button" type="submit"><Plus size={17} /> Connect</button>
             </form>

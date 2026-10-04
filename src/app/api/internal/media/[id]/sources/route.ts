@@ -7,7 +7,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   const provider = String(body.provider ?? "DIRECT_URL").trim().toUpperCase();
   const streamUrl = body.streamUrl ? String(body.streamUrl).trim() : null;
   const iframeUrl = body.iframeUrl ? String(body.iframeUrl).trim() : null;
-  if (!streamUrl && !iframeUrl) return apiError("A stream or iframe URL is required");
+  const externalId = body.externalId ? String(body.externalId).trim() : null;
+  if (!streamUrl && !iframeUrl && !externalId) return apiError("A stream URL, iframe URL or external ID is required");
   try {
     const source = await db.mediaSource.create({
       data: {
@@ -15,7 +16,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         provider,
         streamUrl,
         iframeUrl,
-        externalId: body.externalId ? String(body.externalId) : null,
+        externalId,
         priority: asInteger(body.priority, 0),
         enabled: asBoolean(body.enabled, true),
       },

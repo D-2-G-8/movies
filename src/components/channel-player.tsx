@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Info, LoaderCircle, Radio, RotateCcw, SkipForward, X } from "lucide-react";
+import { ArrowLeft, Info, LoaderCircle, Radio, RotateCcw, SkipForward, Volume2, VolumeX, X } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { PlaybackResponse } from "@/lib/types";
@@ -12,6 +12,7 @@ export function ChannelPlayer() {
   const [infoOpen, setInfoOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [muted, setMuted] = useState(true);
   const advancing = useRef(false);
 
   const load = useCallback(async (advance = false) => {
@@ -64,6 +65,7 @@ export function ChannelPlayer() {
               key={playback.item.historyId}
               src={playback.item.source.url}
               autoPlay
+              muted={muted}
               controls
               playsInline
               onEnded={() => void load(true)}
@@ -81,10 +83,16 @@ export function ChannelPlayer() {
             </div>
           )}
           {playback && !loading && (
-            <div className="now-strip">
-              <div><span>Now playing</span><strong>{playback.item.title}</strong></div>
-              <button onClick={() => void load(true)} aria-label="Skip to next"><SkipForward size={19} /></button>
-            </div>
+            <>
+              <button className="sound-toggle" onClick={() => setMuted((value) => !value)}>
+                {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                {muted ? "Turn on sound" : "Sound on"}
+              </button>
+              <div className="now-strip">
+                <div><span>Now playing</span><strong>{playback.item.title}</strong></div>
+                <button onClick={() => void load(true)} aria-label="Skip to next"><SkipForward size={19} /></button>
+              </div>
+            </>
           )}
         </div>
       </section>

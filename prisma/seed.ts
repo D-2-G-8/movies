@@ -2,15 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const videos = {
-  bunny: "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-  dream: "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-  sintel: "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-  steel: "https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-  blazes: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-  escapes: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-  joyrides: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-};
+const blenderTrailer = "https://download.blender.org/peach/trailer/trailer_iphone.m4v";
 
 async function main() {
   await prisma.playbackHistory.deleteMany();
@@ -22,26 +14,50 @@ async function main() {
   await prisma.channel.deleteMany();
 
   const mediaData = [
-    { type: "MOVIE", title: "Midnight Signal", year: 1987, durationSeconds: 596, url: videos.sintel },
-    { type: "MOVIE", title: "The Empty House", year: 1994, durationSeconds: 734, url: videos.steel },
-    { type: "EPISODE", title: "Dead Air", year: 2021, seriesTitle: "Night Shift", seasonNumber: 1, episodeNumber: 1, durationSeconds: 653, url: videos.dream },
-    { type: "MOVIE", title: "Room for Two", year: 2018, durationSeconds: 635, url: videos.bunny },
-    { type: "EPISODE", title: "The Wrong Table", year: 2022, seriesTitle: "Small Disasters", seasonNumber: 2, episodeNumber: 4, durationSeconds: 147, url: videos.blazes },
-    { type: "CARTOON", title: "Meadow Patrol", year: 2011, durationSeconds: 635, url: videos.bunny },
-    { type: "CARTOON", title: "Cloud Mechanics", year: 2016, durationSeconds: 148, url: videos.joyrides },
+    {
+      type: "MOVIE",
+      title: "Night of the Living Dead",
+      year: 1968,
+      durationSeconds: 5760,
+      archiveId: "Night.Of.The.Living.Dead_1080p",
+    },
+    {
+      type: "MOVIE",
+      title: "His Girl Friday",
+      year: 1940,
+      durationSeconds: 5520,
+      archiveId: "his_girl_friday",
+    },
+    {
+      type: "EPISODE",
+      title: "The Clampetts Strike Oil",
+      year: 1962,
+      seriesTitle: "The Beverly Hillbillies",
+      seasonNumber: 1,
+      episodeNumber: 1,
+      durationSeconds: 1500,
+      archiveId: "Beverly_Hillbillies_Ep01_The_Clampetts_Strike_Oil",
+    },
+    {
+      type: "CARTOON",
+      title: "The Mechanical Monsters",
+      year: 1941,
+      durationSeconds: 540,
+      archiveId: "mechanical_monsters_1941",
+    },
   ];
 
   const media = [];
   for (const item of mediaData) {
-    const { url, ...data } = item;
+    const { archiveId, ...data } = item;
     media.push(
       await prisma.media.create({
         data: {
           ...data,
           sources: {
             create: {
-              provider: "DIRECT_URL",
-              streamUrl: url,
+              provider: "INTERNET_ARCHIVE",
+              externalId: archiveId,
               priority: 100,
             },
           },
@@ -50,11 +66,16 @@ async function main() {
     );
   }
 
-  const trailers = await Promise.all([
-    prisma.ad.create({ data: { title: "After Dark — trailer", type: "TRAILER", videoUrl: videos.escapes, durationSeconds: 15 } }),
-    prisma.ad.create({ data: { title: "Coming Soon: Orbit", type: "TRAILER", videoUrl: videos.blazes, durationSeconds: 15 } }),
-    prisma.ad.create({ data: { title: "Nightwave station ident", type: "AD", videoUrl: videos.joyrides, durationSeconds: 15 } }),
-  ]);
+  const trailers = [
+    await prisma.ad.create({
+      data: {
+        title: "Big Buck Bunny — official trailer",
+        type: "TRAILER",
+        videoUrl: blenderTrailer,
+        durationSeconds: 33,
+      },
+    }),
+  ];
 
   const channels = await Promise.all([
     prisma.channel.create({
@@ -65,7 +86,7 @@ async function main() {
         accent: "#ff5e57",
         playbackMode: "RANDOM",
         repeatDays: 14,
-        interstitialCount: 2,
+        interstitialCount: 1,
         useTrailers: true,
         useAds: false,
         interstitialRepeatDays: 3,
@@ -81,7 +102,7 @@ async function main() {
         repeatDays: 5,
         interstitialCount: 1,
         useTrailers: true,
-        useAds: true,
+        useAds: false,
       },
     }),
     prisma.channel.create({
@@ -93,16 +114,16 @@ async function main() {
         playbackMode: "RANDOM",
         repeatDays: 3,
         interstitialCount: 1,
-        useTrailers: false,
-        useAds: true,
+        useTrailers: true,
+        useAds: false,
       },
     }),
   ]);
 
   const mediaMap = [
-    [media[0], media[1], media[2]],
-    [media[3], media[4], media[0]],
-    [media[5], media[6]],
+    [media[0]],
+    [media[1], media[2]],
+    [media[3]],
   ];
 
   for (const [channelIndex, channel] of channels.entries()) {

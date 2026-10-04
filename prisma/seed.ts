@@ -40,7 +40,7 @@ async function main() {
     },
     {
       type: "CARTOON",
-      title: "The Mechanical Monsters",
+      title: "Superman: The Mechanical Monsters",
       year: 1941,
       durationSeconds: 540,
       archiveId: "mechanical_monsters_1941",
